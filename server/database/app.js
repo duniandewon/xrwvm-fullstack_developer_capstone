@@ -27,7 +27,7 @@ try {
     });
 
 } catch (error) {
-    res.status(500).json({ error: 'Error fetching documents' });
+    console.error(`Error initializing database: ${error}`)
 }
 
 
@@ -42,7 +42,8 @@ app.get('/fetchReviews', async (req, res) => {
         const documents = await Reviews.find();
         res.json(documents);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching documents' });
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching documents' })
     }
 });
 
@@ -52,6 +53,7 @@ app.get('/fetchReviews/dealer/:id', async (req, res) => {
         const documents = await Reviews.find({ dealership: req.params.id });
         res.json(documents);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Error fetching documents' });
     }
 });
@@ -62,6 +64,7 @@ app.get('/fetchDealers', async (req, res) => {
         const dealerships = await Dealerships.find({});
         res.json(dealerships);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Error fetching documents' });
     }
 });
@@ -81,6 +84,7 @@ app.get('/fetchDealers/:state', async (req, res) => {
 
         res.json(dealerships);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Error fetching documents' });
     }
 });
@@ -100,13 +104,14 @@ app.get('/fetchDealer/:id', async (req, res) => {
 
         res.json(dealership);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Error fetching document' });
     }
 });
 
 //Express route to insert review
 app.post('/insert_review', express.raw({ type: '*/*' }), async (req, res) => {
-    data = JSON.parse(req.body);
+    const data = JSON.parse(req.body);
     const documents = await Reviews.find().sort({ id: -1 })
     let new_id = documents[0]['id'] + 1
 
